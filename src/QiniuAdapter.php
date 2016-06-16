@@ -425,8 +425,6 @@ class QiniuAdapter extends AbstractAdapter
 
         list($ret, $error) = $bucketMgr->stat($this->bucket, $path);
         if ($error !== null) {
-            $this->logQiniuError($error);
-
             return false;
         } else {
             return $ret;
