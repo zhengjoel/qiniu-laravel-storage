@@ -487,6 +487,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $this->pathPrefix = $this->prefixedDomains[$domainType];
         $location = $this->applyPathPrefix($path);
+        $location = new QiniuUrl($location);
 
         return $location;
     }
@@ -510,6 +511,7 @@ class QiniuAdapter extends AbstractAdapter
         $auth = $this->getAuth();
         $location = $this->applyPathPrefix($path);
         $authUrl = $auth->privateDownloadUrl($location, $expires);
+        $authUrl = new QiniuUrl($authUrl);
 
         return $authUrl;
     }
@@ -570,6 +572,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $operation = $this->getOperation();
         $url = $operation->buildUrl($path, $ops);
+        $url = new QiniuUrl($url);
 
         return $url;
     }
@@ -580,6 +583,7 @@ class QiniuAdapter extends AbstractAdapter
         $operation = $this->getOperation();
         $url = $operation->buildUrl($path, $ops);
         $authUrl = $auth->privateDownloadUrl($url);
+        $authUrl = new QiniuUrl($authUrl);
 
         return $authUrl;
     }
