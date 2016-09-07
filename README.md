@@ -6,6 +6,8 @@
 
 ## 更新
 
+ v0.5 增加了```QiniuUrl```来更方便的设置文件 URL 参数。
+ 
  v0.3 增加了对PIPE以及回调地址参数的配置。 感谢abcsun提供的灵感。
 
  v0.2 提供了对多域名的支持。这是为了配合七牛的默认域名、HTTPS域名和自定义域名而添加的功能。
@@ -66,6 +68,8 @@
     
     $disk->getDriver()->uploadToken('file.jpg');                //获取上传Token
     $disk->getDriver()->downloadUrl('file.jpg');                //获取下载地址
+    $disk->getDriver()->downloadUrl('file.jpg')
+                      ->setDownload('foo.jpg');                 //获取下载地址，文件名为 foo.jpg
     $disk->getDriver()->downloadUrl('file.jpg', 'https');       //获取HTTPS下载地址
     $disk->getDriver()->privateDownloadUrl('file.jpg');         //获取私有bucket下载地址
     $disk->getDriver()->privateDownloadUrl('file.jpg', 'https');//获取私有bucket的HTTPS下载地址
@@ -113,6 +117,8 @@
     
     $disk->uploadToken('file.jpg');                     //获取上传Token
     $disk->downloadUrl('file.jpg');                     //获取下载地址
+    $disk->downloadUrl('file.jpg')
+         ->setDownload('foo.jpg');                      //获取下载地址，文件名为 foo.jpg
     $disk->downloadUrl('file.jpg', 'https');            //获取HTTPS下载地址
     $disk->privateDownloadUrl('file.jpg');              //获取私有bucket下载地址
     $disk->privateDownloadUrl('file.jpg', 'https');     //获取私有bucket的HTTPS下载地址

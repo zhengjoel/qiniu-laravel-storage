@@ -17,7 +17,6 @@ use Qiniu\Config as QiniuConfig;
 class QiniuUrl
 {
     private $url = null;
-    private $download = null;
     private $parameters = [];
 
     public function __construct($url)
@@ -74,7 +73,7 @@ class QiniuUrl
      */
     public function setDownload($download)
     {
-        $this->setParameter('download', urlencode($download));
+        return $this->setParameter('download', urlencode($download));
     }
 
     /**
@@ -99,5 +98,6 @@ class QiniuUrl
     public function setParameter($name, $value)
     {
         $this->parameters[$name] = $name . '/' . $value;
+        return $this;
     }
 }
