@@ -1,5 +1,6 @@
 <?php namespace zgldh\QiniuStorage;
 
+use JsonSerializable;
 use League\Flysystem\Adapter\AbstractAdapter;
 use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
 use League\Flysystem\Adapter\Polyfill\StreamedReadingTrait;
@@ -14,7 +15,7 @@ use Qiniu\Storage\ResumeUploader;
 use Qiniu\Storage\UploadManager;
 use Qiniu\Config as QiniuConfig;
 
-class QiniuUrl
+class QiniuUrl implements JsonSerializable
 {
     private $url = null;
     private $parameters = [];
@@ -99,5 +100,17 @@ class QiniuUrl
     {
         $this->parameters[$name] = $name . '/' . $value;
         return $this;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    function jsonSerialize()
+    {
+        return $this->__toString();
     }
 }
