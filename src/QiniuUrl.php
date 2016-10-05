@@ -1,19 +1,6 @@
 <?php namespace zgldh\QiniuStorage;
 
 use JsonSerializable;
-use League\Flysystem\Adapter\AbstractAdapter;
-use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
-use League\Flysystem\Adapter\Polyfill\StreamedReadingTrait;
-use League\Flysystem\Config;
-use Qiniu\Auth;
-use Qiniu\Http\Error;
-use Qiniu\Processing\Operation;
-use Qiniu\Processing\PersistentFop;
-use Qiniu\Storage\BucketManager;
-use Qiniu\Storage\FormUploader;
-use Qiniu\Storage\ResumeUploader;
-use Qiniu\Storage\UploadManager;
-use Qiniu\Config as QiniuConfig;
 
 class QiniuUrl implements JsonSerializable
 {
