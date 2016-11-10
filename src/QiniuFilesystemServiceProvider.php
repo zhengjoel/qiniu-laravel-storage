@@ -3,12 +3,14 @@
 use League\Flysystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use zgldh\QiniuStorage\Plugins\DownloadUrl;
+use zgldh\QiniuStorage\Plugins\Fetch;
 use zgldh\QiniuStorage\Plugins\ImageExif;
 use zgldh\QiniuStorage\Plugins\ImageInfo;
 use zgldh\QiniuStorage\Plugins\ImagePreviewUrl;
 use zgldh\QiniuStorage\Plugins\PersistentFop;
 use zgldh\QiniuStorage\Plugins\PersistentStatus;
 use zgldh\QiniuStorage\Plugins\PrivateDownloadUrl;
+use zgldh\QiniuStorage\Plugins\Qetag;
 use zgldh\QiniuStorage\Plugins\UploadToken;
 use zgldh\QiniuStorage\Plugins\PrivateImagePreviewUrl;
 use zgldh\QiniuStorage\Plugins\VerifyCallback;
@@ -35,7 +37,7 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
                     $config['secret_key'],
                     $config['bucket'],
                     $domains,
-                    $config['notify_url']?$config['notify_url']:null
+                    $config['notify_url'] ? $config['notify_url'] : null
                 );
                 $file_system = new Filesystem($qiniu_adapter);
                 $file_system->addPlugin(new PrivateDownloadUrl());
@@ -48,6 +50,8 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
                 $file_system->addPlugin(new UploadToken());
                 $file_system->addPlugin(new PrivateImagePreviewUrl());
                 $file_system->addPlugin(new VerifyCallback());
+                $file_system->addPlugin(new Fetch());
+                $file_system->addPlugin(new Qetag());
 
                 return $file_system;
             }
