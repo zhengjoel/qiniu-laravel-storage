@@ -5,6 +5,7 @@ use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
 use League\Flysystem\Adapter\Polyfill\StreamedReadingTrait;
 use League\Flysystem\Config;
 use Qiniu\Auth;
+use Qiniu\Etag;
 use Qiniu\Http\Error;
 use Qiniu\Processing\Operation;
 use Qiniu\Processing\PersistentFop;
@@ -31,6 +32,8 @@ class QiniuAdapter extends AbstractAdapter
     private $operation = null;
 
     private $prefixedDomains = [];
+
+    private $lastQetag = null;
 
     public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null)
     {
@@ -106,6 +109,20 @@ class QiniuAdapter extends AbstractAdapter
     }
 
     /**
+     * Update a file.
+     *
+     * @param string $path
+     * @param string $contents
+     * @param Config $config Config object
+     *
+     * @return array|false false on failure file meta data on success
+     */
+    public function update($path, $contents, Config $config)
+    {
+        return $this->write($path, $contents, $config);
+    }
+
+    /**
      * Write a new file.
      *
      * @param string $path
@@ -136,18 +153,19 @@ class QiniuAdapter extends AbstractAdapter
     }
 
     /**
-     * Update a file.
+     * Update a file using a stream.
      *
      * @param string $path
-     * @param string $contents
-     * @param Config $config Config object
+     * @param resource $resource
+     * @param Config $config Config object or visibility setting
      *
-     * @return array|false false on failure file meta data on success
+     * @return mixed false of file metadata
      */
-    public function update($path, $contents, Config $config)
+    public function updateStream($path, $resource, Config $config)
     {
-        return $this->write($path, $contents, $config);
+        return $this->writeStream($path, $resource, $config);
     }
+
 
     /**
      * Write using a stream.
@@ -211,7 +229,7 @@ class QiniuAdapter extends AbstractAdapter
             if ($data === false) {
                 throw new \Exception("file can not read", 1);
             }
-            return FormUploader::put(
+            $result = FormUploader::put(
                 $upToken,
                 $key,
                 $data,
@@ -220,6 +238,8 @@ class QiniuAdapter extends AbstractAdapter
                 $mime,
                 $checkCrc
             );
+            \Log::debug(__CLASS__, $result);
+            return $result;
         }
         $up = new ResumeUploader(
             $upToken,
@@ -232,23 +252,9 @@ class QiniuAdapter extends AbstractAdapter
         );
         $ret = $up->upload();
         fclose($file);
+        \Log::debug(__CLASS__, $ret);
         return $ret;
     }
-
-    /**
-     * Update a file using a stream.
-     *
-     * @param string $path
-     * @param resource $resource
-     * @param Config $config Config object or visibility setting
-     *
-     * @return mixed false of file metadata
-     */
-    public function updateStream($path, $resource, Config $config)
-    {
-        return $this->writeStream($path, $resource, $config);
-    }
-
 
     /**
      * Rename a file.
@@ -327,7 +333,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $bucketMgr = $this->getBucketManager();
 
-        $error = $bucketMgr->->fetch($url, $this->bucket, $key);
+        $error = $bucketMgr->fetch($url, $this->bucket, $key);
         if ($error !== null) {
             $this->logQiniuError($error, $this->bucket . '/' . $key);
 
@@ -693,5 +699,24 @@ class QiniuAdapter extends AbstractAdapter
         $auth = $this->getAuth();
 
         return $auth->verifyCallback($contentType, $originAuthorization, $url, $body);
+    }
+
+    /**
+     * @DriverFunction
+     * @param $localFilePath
+     * @return array
+     */
+    public function calculateQetag($localFilePath)
+    {
+        return Etag::sum($localFilePath);
+    }
+
+    /**
+     * @DriverFunction
+     * @return null
+     */
+    public function getLastQetag()
+    {
+        return $this->lastQetag;
     }
 }
