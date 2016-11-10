@@ -252,4 +252,24 @@ class QiniuStorage
     {
         return $this->storage->getDriver()->verifyCallback($contentType, $originAuthorization, $url, $body);
     }
+
+    /**
+     * 调用fetch将 foo.jpg 数据以 bar.jpg 的名字储存起来。
+     * @param $url
+     * @param $key
+     * @return bool
+     */
+    public function fetch($url, $key)
+    {
+        return $this->storage->getDriver()->fetch($url, $key);
+    }
+
+    /**
+     * 得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
+     * @return string
+     */
+    public function qetag()
+    {
+        return $this->storage->getDriver()->qetag();
+    }
 }
