@@ -483,6 +483,12 @@ class QiniuAdapter extends AbstractAdapter
         return false;
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param string $domainType
+     * @return string|QiniuUrl
+     */
     public function downloadUrl($path = null, $domainType = 'default')
     {
         $this->pathPrefix = $this->prefixedDomains[$domainType];
@@ -493,6 +499,7 @@ class QiniuAdapter extends AbstractAdapter
     }
 
     /**
+     * @DriverFunction
      * @param $path
      * @param string|array $settings ['domain'=>'default', 'expires'=>3600]
      * @return string
@@ -516,6 +523,14 @@ class QiniuAdapter extends AbstractAdapter
         return $authUrl;
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param null $fops
+     * @param null $pipline
+     * @param bool $force
+     * @return bool
+     */
     public function persistentFop($path = null, $fops = null, $pipline = null, $force = false)
     {
         $auth = $this->getAuth();
@@ -533,11 +548,21 @@ class QiniuAdapter extends AbstractAdapter
         }
     }
 
+    /**
+     * @DriverFunction
+     * @param $id
+     * @return array
+     */
     public function persistentStatus($id)
     {
         return PersistentFop::status($id);
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @return bool
+     */
     public function imageInfo($path = null)
     {
         $operation = $this->getOperation();
@@ -553,6 +578,11 @@ class QiniuAdapter extends AbstractAdapter
         }
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @return bool
+     */
     public function imageExif($path = null)
     {
         $operation = $this->getOperation();
@@ -568,6 +598,12 @@ class QiniuAdapter extends AbstractAdapter
         }
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param null $ops
+     * @return string|QiniuUrl
+     */
     public function imagePreviewUrl($path = null, $ops = null)
     {
         $operation = $this->getOperation();
@@ -577,6 +613,12 @@ class QiniuAdapter extends AbstractAdapter
         return $url;
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param null $ops
+     * @return string|QiniuUrl
+     */
     public function privateImagePreviewUrl($path = null, $ops = null)
     {
         $auth = $this->getAuth();
@@ -588,6 +630,14 @@ class QiniuAdapter extends AbstractAdapter
         return $authUrl;
     }
 
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param int $expires
+     * @param null $policy
+     * @param bool $strictPolicy
+     * @return string
+     */
     public function uploadToken(
         $path = null,
         $expires = 3600,
