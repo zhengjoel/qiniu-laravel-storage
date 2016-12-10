@@ -193,6 +193,7 @@ class QiniuAdapter extends AbstractAdapter
 
             return false;
         } else {
+            $this->lastQetag = $ret['hash'];
             return $ret;
         }
     }
@@ -239,7 +240,6 @@ class QiniuAdapter extends AbstractAdapter
                 $mime,
                 $checkCrc
             );
-            $this->lastQetag = $result['hash'];
             return $result;
         }
         $up = new ResumeUploader(
@@ -253,7 +253,6 @@ class QiniuAdapter extends AbstractAdapter
         );
         $ret = $up->upload();
         fclose($file);
-        $this->lastQetag = $ret['hash'];
         return $ret;
     }
 
