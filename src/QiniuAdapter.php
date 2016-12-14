@@ -328,19 +328,19 @@ class QiniuAdapter extends AbstractAdapter
      * @param string $url
      * @param string $key
      *
-     * @return bool
+     * @return bool|array
      */
     public function fetch($url, $key = null)
     {
         $bucketMgr = $this->getBucketManager();
 
-        $error = $bucketMgr->fetch($url, $this->bucket, $key);
+        list($ret, $error) = $bucketMgr->fetch($url, $this->bucket, $key);
         if ($error !== null) {
             $this->logQiniuError($error, $this->bucket . '/' . $key);
 
             return false;
         } else {
-            return true;
+            return $ret;
         }
     }
 
