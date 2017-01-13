@@ -7,9 +7,9 @@
 ## 更新
 
  v0.6 增加了```fetch```, ```qetag``` 命令。
- 
+
  v0.5 增加了```QiniuUrl```来更方便的设置文件 URL 参数。
- 
+
  v0.3 增加了对PIPE以及回调地址参数的配置。 感谢abcsun提供的灵感。
 
  v0.2 提供了对多域名的支持。这是为了配合七牛的默认域名、HTTPS域名和自定义域名而添加的功能。
@@ -19,7 +19,7 @@
  - ```composer require zgldh/qiniu-laravel-storage```
  - ```config/app.php``` 里面的 ```providers``` 数组， 加上一行 ```zgldh\QiniuStorage\QiniuFilesystemServiceProvider```
  - ```config/filesystem.php``` 里面的 ```disks```数组加上：
- 
+
 ```php
 
     'disks' => [
@@ -37,11 +37,11 @@
             'notify_url'=> '',  //持久化处理回调地址
         ],
     ],
-    
+
 ```
 
  - 完成
- 
+
 ## 使用
 
 第一种用法
@@ -52,7 +52,7 @@
     $disk->exists('file.jpg');                      //文件是否存在
     $disk->get('file.jpg');                         //获取文件内容
     $disk->put('file.jpg',$contents);               //上传文件
-    $disk->put('file.jpg',fopen('path/to/big.jpg','r+')); //分段上传文件。建议大文件>10Mb使用。 
+    $disk->put('file.jpg',fopen('path/to/big.jpg','r+')); //分段上传文件。建议大文件>10Mb使用。
     $disk->prepend('file.log', 'Prepended Text');   //附加内容到文件开头
     $disk->append('file.log', 'Appended Text');     //附加内容到文件结尾
     $disk->delete('file.jpg');                      //删除文件
@@ -67,7 +67,7 @@
     $directories = $disk->allDirectories($directory);   //这个也没实现。。。
     $disk->makeDirectory($directory);               //这个其实没有任何作用
     $disk->deleteDirectory($directory);             //删除目录，包括目录下所有子文件子目录
-    
+
     $disk->getDriver()->uploadToken('file.jpg');                //获取上传Token
     $disk->getDriver()->downloadUrl('file.jpg');                //获取下载地址
     $disk->getDriver()->downloadUrl('file.jpg')
@@ -75,11 +75,12 @@
     $disk->getDriver()->downloadUrl('file.jpg', 'https');       //获取HTTPS下载地址
     $disk->getDriver()->privateDownloadUrl('file.jpg');         //获取私有bucket下载地址
     $disk->getDriver()->privateDownloadUrl('file.jpg', 'https');//获取私有bucket的HTTPS下载地址
-    $disk->getDriver()->privateDownloadUrl('file.jpg', 
+    $disk->getDriver()->privateDownloadUrl('file.jpg',
                                         [
                                             'domain'=>'https',
                                             'expires'=>3600
                                         ]);                     //获取私有bucket的HTTPS下载地址。超时 3600 秒。
+    $disk->getDriver()->avInfo('file.mp3');                     //获取多媒体文件信息
     $disk->getDriver()->imageInfo('file.jpg');                  //获取图片信息
     $disk->getDriver()->imageExif('file.jpg');                  //获取图片EXIF信息
     $disk->getDriver()->imagePreviewUrl('file.jpg','imageView2/0/w/100/h/200');                         //获取图片预览URL
@@ -118,7 +119,7 @@
     $directories = $disk->allDirectories($directory);   //这个也没实现。。。
     $disk->makeDirectory($directory);               //这个其实没有任何作用
     $disk->deleteDirectory($directory);             //删除目录，包括目录下所有子文件子目录
-    
+
     $disk->uploadToken('file.jpg');                     //获取上传Token
     $disk->downloadUrl('file.jpg');                     //获取下载地址
     $disk->downloadUrl('file.jpg')
@@ -126,11 +127,12 @@
     $disk->downloadUrl('file.jpg', 'https');            //获取HTTPS下载地址
     $disk->privateDownloadUrl('file.jpg');              //获取私有bucket下载地址
     $disk->privateDownloadUrl('file.jpg', 'https');     //获取私有bucket的HTTPS下载地址
-    $disk->privateDownloadUrl('file.jpg', 
+    $disk->privateDownloadUrl('file.jpg',
                             [
                                 'domain'=>'https',
                                 'expires'=>3600
                             ]);                         //获取私有bucket的HTTPS下载地址。超时 3600 秒。
+    $disk->avInfo('file.mp3');                          //获取多媒体文件信息
     $disk->imageInfo('file.jpg');                       //获取图片信息
     $disk->imageExif('file.jpg');                       //获取图片EXIF信息
     $disk->imagePreviewUrl('file.jpg','imageView2/0/w/100/h/200');                          //获取图片预览URL
@@ -139,7 +141,7 @@
     $disk->persistentFop('file.flv','avthumb/m3u8/segtime/40/vcodec/libx264/s/320x240');    //执行持久化数据处理
     $disk->persistentFop('file.flv','fop','队列名');    //使用私有队列执行持久化数据处理
     $disk->persistentStatus($persistent_fop_id);        //查看持久化数据处理的状态。
-    
+
     $disk->fetch('http://abc.com/foo.jpg', 'bar.jpg'); //调用fetch将 foo.jpg 数据以 bar.jpg 的名字储存起来。
     $disk->qetag();    //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
 

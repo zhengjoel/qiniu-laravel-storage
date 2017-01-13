@@ -6,6 +6,7 @@ use zgldh\QiniuStorage\Plugins\DownloadUrl;
 use zgldh\QiniuStorage\Plugins\Fetch;
 use zgldh\QiniuStorage\Plugins\ImageExif;
 use zgldh\QiniuStorage\Plugins\ImageInfo;
+use zgldh\QiniuStorage\Plugins\AvInfo;
 use zgldh\QiniuStorage\Plugins\ImagePreviewUrl;
 use zgldh\QiniuStorage\Plugins\PersistentFop;
 use zgldh\QiniuStorage\Plugins\PersistentStatus;
@@ -42,6 +43,7 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
                 $file_system = new Filesystem($qiniu_adapter);
                 $file_system->addPlugin(new PrivateDownloadUrl());
                 $file_system->addPlugin(new DownloadUrl());
+                $file_system->addPlugin(new AvInfo());
                 $file_system->addPlugin(new ImageInfo());
                 $file_system->addPlugin(new ImageExif());
                 $file_system->addPlugin(new ImagePreviewUrl());
