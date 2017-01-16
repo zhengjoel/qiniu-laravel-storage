@@ -31,6 +31,6 @@ class AvInfo extends AbstractPlugin {
 
     public function handle($path = null)
     {
-        return $this->filesystem->getAdapter()->AvInfo($path);
+        return $this->filesystem->getAdapter()->avInfo($path);
     }
 }
