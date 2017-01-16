@@ -592,6 +592,26 @@ class QiniuAdapter extends AbstractAdapter
      * @param null $path
      * @return bool
      */
+    public function avInfo($path = null)
+    {
+        $operation = $this->getOperation();
+
+        list($ret, $error) = $operation->execute($path, 'avInfo');
+
+        if ($error !== null) {
+            $this->logQiniuError($error);
+
+            return false;
+        } else {
+            return $ret;
+        }
+    }
+
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @return bool
+     */
     public function imageInfo($path = null)
     {
         $operation = $this->getOperation();

@@ -181,6 +181,16 @@ class QiniuStorage
     }
 
     /**
+     * 获取多媒体文件信息
+     * @param $key
+     * @return mixed
+     */
+    public function avInfo($key)
+    {
+        return $this->storage->getDriver()->avInfo($key);
+    }
+
+    /**
      * 获取图片信息
      * @param $key
      * @return mixed
