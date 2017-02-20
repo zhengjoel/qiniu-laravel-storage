@@ -155,7 +155,7 @@ class QiniuStorage
      * @param $key
      * @return bool
      */
-    public function uploadToken($key)
+    public function uploadToken($key = null)
     {
         return $this->storage->getDriver()->uploadToken($key);
     }
