@@ -68,6 +68,7 @@
     $disk->makeDirectory($directory);               //这个其实没有任何作用
     $disk->deleteDirectory($directory);             //删除目录，包括目录下所有子文件子目录
 
+    $disk->getDriver()->uploadToken();                          //获取上传Token
     $disk->getDriver()->uploadToken('file.jpg');                //获取上传Token
     $disk->getDriver()->downloadUrl('file.jpg');                //获取下载地址
     $disk->getDriver()->downloadUrl('file.jpg')
@@ -120,6 +121,7 @@
     $disk->makeDirectory($directory);               //这个其实没有任何作用
     $disk->deleteDirectory($directory);             //删除目录，包括目录下所有子文件子目录
 
+    $disk->uploadToken();                               //获取上传Token
     $disk->uploadToken('file.jpg');                     //获取上传Token
     $disk->downloadUrl('file.jpg');                     //获取下载地址
     $disk->downloadUrl('file.jpg')
