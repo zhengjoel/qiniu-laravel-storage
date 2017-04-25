@@ -155,9 +155,9 @@ class QiniuStorage
      * @param $key
      * @return bool
      */
-    public function uploadToken($key = null)
+    public function uploadToken($key = null, $expires = 3600, $policy = null, $strictPolicy = true)
     {
-        return $this->storage->getDriver()->uploadToken($key);
+        return $this->storage->getDriver()->uploadToken($key, $expires, $policy, $strictPolicy);
     }
 
     /**
