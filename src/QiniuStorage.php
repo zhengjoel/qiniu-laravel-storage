@@ -4,15 +4,15 @@
 class QiniuStorage
 {
     private $storage = null;
-    private static $instance = null;
+    private static $instance = [];
 
     public static function disk($name)
     {
-        if (self::$instance == null) {
-            self::$instance = new self($name);
+        if (!isset(self::$instance[$name])) {
+            self::$instance[$name] = new self($name);
         }
 
-        return self::$instance;
+        return self::$instance[$name];
     }
 
     private function __construct($name)
