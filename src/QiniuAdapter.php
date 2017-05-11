@@ -25,6 +25,7 @@ class QiniuAdapter extends AbstractAdapter
     private $bucket = null;
     private $domains = null;
     private $notify_url = null; //持久化处理后的回调地址
+    private $access = null;
 
     private $auth = null;
     private $upload_manager = null;
@@ -35,7 +36,7 @@ class QiniuAdapter extends AbstractAdapter
 
     private $lastQetag = null;
 
-    public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null)
+    public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null, $access = 'public')
     {
         $this->access_key = $access_key;
         $this->secret_key = $secret_key;
@@ -46,6 +47,7 @@ class QiniuAdapter extends AbstractAdapter
         $this->setDomainPrefix('https://' . $this->domains['https'], 'https');
         $this->setDomainPrefix('http://' . $this->domains['custom'], 'custom');
         $this->notify_url = $notify_url;
+        $this->access = $access;
     }
 
     /**
@@ -97,7 +99,10 @@ class QiniuAdapter extends AbstractAdapter
     private function getOperation()
     {
         if ($this->operation == null) {
-            $this->operation = new Operation($this->domains['default']);
+            $this->operation = new Operation(
+                $this->domains['default'],
+                $this->access === 'public' ? null : $this->getAuth()
+            );
         }
 
         return $this->operation;
@@ -596,7 +601,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $operation = $this->getOperation();
 
-        list($ret, $error) = $operation->execute($path, 'avInfo');
+        list($ret, $error) = $operation->execute($path, 'avinfo');
 
         if ($error !== null) {
             $this->logQiniuError($error);
