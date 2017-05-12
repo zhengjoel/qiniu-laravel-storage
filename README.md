@@ -35,6 +35,7 @@
             'secret_key'=> '',  //SecretKey
             'bucket'    => '',  //Bucket名字
             'notify_url'=> '',  //持久化处理回调地址
+            'access'    => 'public'  //空间访问控制 public 或 private
         ],
     ],
 

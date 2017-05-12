@@ -153,6 +153,9 @@ class QiniuStorage
     /**
      * 获取上传Token
      * @param $key
+     * @param $expires
+     * @param $policy
+     * @param $strictPolicy
      * @return bool
      */
     public function uploadToken($key = null, $expires = 3600, $policy = null, $strictPolicy = true)
@@ -236,11 +239,14 @@ class QiniuStorage
      * 执行持久化数据处理
      * @param $key
      * @param $opts
+     * @param $pipline
+     * @param $force
+     * @param $notify_url
      * @return mixed
      */
-    public function persistentFop($key, $opts)
+    public function persistentFop($key, $opts, $pipline = null, $force = false, $notify_url = null)
     {
-        return $this->storage->getDriver()->persistentFop($key, $opts);
+        return $this->storage->getDriver()->persistentFop($key, $opts, $pipline, $force, $notify_url);
     }
 
     /**
