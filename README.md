@@ -17,7 +17,7 @@
 ## 安装
 
  - ```composer require zgldh/qiniu-laravel-storage```
- - ```config/app.php``` 里面的 ```providers``` 数组， 加上一行 ```zgldh\QiniuStorage\QiniuFilesystemServiceProvider::class```
+ - ```config/app.php``` 里面的 ```providers``` 数组， 加上一行 ```zgldh\QiniuStorage\QiniuFilesystemServiceProvider```
  - ```config/filesystem.php``` 里面的 ```disks```数组加上：
 
 ```php
