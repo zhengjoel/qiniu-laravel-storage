@@ -139,7 +139,9 @@ class QiniuAdapter extends AbstractAdapter
     public function write($path, $contents, Config $config)
     {
         $auth = $this->getAuth();
-        $token = $auth->uploadToken($this->bucket, $path);
+
+        $token = $config->get('token', null);
+        $token = $token ? $token : $auth->uploadToken($this->bucket, $path);
 
         $params = $config->get('params', null);
         $mime = $config->get('mime', 'application/octet-stream');
@@ -185,7 +187,9 @@ class QiniuAdapter extends AbstractAdapter
     public function writeStream($path, $resource, Config $config)
     {
         $auth = $this->getAuth();
-        $token = $auth->uploadToken($this->bucket, $path);
+
+        $token = $config->get('token', null);
+        $token = $token ? $token : $auth->uploadToken($this->bucket, $path);
 
         $params = $config->get('params', null);
         $mime = $config->get('mime', 'application/octet-stream');

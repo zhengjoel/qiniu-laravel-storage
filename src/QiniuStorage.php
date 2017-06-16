@@ -46,9 +46,9 @@ class QiniuStorage
      * @param $contents
      * @return bool
      */
-    public function put($key, $contents)
+    public function put($key, $contents, $config = [])
     {
-        return $this->storage->put($key, $contents);
+        return $this->storage->put($key, $contents, $config);
     }
 
     /**

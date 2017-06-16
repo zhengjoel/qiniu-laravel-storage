@@ -54,6 +54,9 @@
     $disk->get('file.jpg');                         //获取文件内容
     $disk->put('file.jpg',$contents);               //上传文件
     $disk->put('file.jpg',fopen('path/to/big.jpg','r+')); //分段上传文件。建议大文件>10Mb使用。
+    $disk->put('file.jpg',$content, ['token'=>$uploadToken]); 
+                                                    // 使用自定义的 uploadToken 进行上传。 
+                                                    // 常用于自动触发持久化处理 https://github.com/qiniu/php-sdk/blob/master/examples/upload_and_pfop.php
     $disk->prepend('file.log', 'Prepended Text');   //附加内容到文件开头
     $disk->append('file.log', 'Appended Text');     //附加内容到文件结尾
     $disk->delete('file.jpg');                      //删除文件
@@ -107,6 +110,9 @@
     $disk->get('file.jpg');                         //获取文件内容
     $disk->put('file.jpg',$contents);               //上传文件
     $disk->put('file.jpg',fopen('path/to/big.jpg','r+')); //分段上传文件。建议大文件>10Mb使用。
+    $disk->put('file.jpg',$content, ['token'=>$uploadToken]); 
+                                                     // 使用自定义的 uploadToken 进行上传。 
+                                                     // 常用于自动触发持久化处理 https://github.com/qiniu/php-sdk/blob/master/examples/upload_and_pfop.php
     $disk->prepend('file.log', 'Prepended Text');   //附加内容到文件开头
     $disk->append('file.log', 'Appended Text');     //附加内容到文件结尾
     $disk->delete('file.jpg');                      //删除文件
