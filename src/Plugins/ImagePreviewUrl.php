@@ -11,8 +11,8 @@ namespace zgldh\QiniuStorage\Plugins;
 use League\Flysystem\Plugin\AbstractPlugin;
 
 /**
- * Class PrivateDownloadUrl
- * 查看图像EXIF <br>
+ * Class ImagePreviewUrl
+ * 图片预览地址，常常带有图片操作符，生成缩略图、水印等 <br>
  * $disk        = \Storage::disk('qiniu'); <br>
  * $re          = $disk->getDriver()->imagePreviewUrl('foo/bar1.css',$ops); <br>
  * @package zgldh\QiniuStorage\Plugins

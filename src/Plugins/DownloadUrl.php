@@ -11,7 +11,7 @@
     use League\Flysystem\Plugin\AbstractPlugin;
 
     /**
-     * Class PrivateDownloadUrl
+     * Class DownloadUrl
      * 得到公有资源下载地址 <br>
      * $disk        = \Storage::disk('qiniu'); <br>
      * $re          = $disk->getDriver()->downloadUrl('foo/bar1.css'); <br>

@@ -11,8 +11,8 @@ namespace zgldh\QiniuStorage\Plugins;
 use League\Flysystem\Plugin\AbstractPlugin;
 
 /**
- * Class PrivateDownloadUrl
- * 查看图像EXIF <br>
+ * Class PersistentStatus
+ * 查询持久化操作状态 <br>
  * $disk        = \Storage::disk('qiniu'); <br>
  * $re          = $disk->getDriver()->persistentStatus('foo/bar1.css'); <br>
  * @package zgldh\QiniuStorage\Plugins

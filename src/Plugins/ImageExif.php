@@ -11,7 +11,7 @@ namespace zgldh\QiniuStorage\Plugins;
 use League\Flysystem\Plugin\AbstractPlugin;
 
 /**
- * Class PrivateDownloadUrl
+ * Class ImageExif
  * 查看图像EXIF <br>
  * $disk        = \Storage::disk('qiniu'); <br>
  * $re          = $disk->getDriver()->imageExif('foo/bar1.css'); <br>

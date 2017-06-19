@@ -11,8 +11,8 @@ namespace zgldh\QiniuStorage\Plugins;
 use League\Flysystem\Plugin\AbstractPlugin;
 
 /**
- * Class PrivateDownloadUrl
- * 查看图像EXIF <br>
+ * Class PersistentFop
+ * 执行持久化操作 <br>
  * $disk        = \Storage::disk('qiniu'); <br>
  * $re          = $disk->getDriver()->persistentFop('foo/bar1.css'); <br>
  * @package zgldh\QiniuStorage\Plugins
