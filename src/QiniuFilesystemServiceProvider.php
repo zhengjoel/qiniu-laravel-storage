@@ -15,6 +15,7 @@ use zgldh\QiniuStorage\Plugins\Qetag;
 use zgldh\QiniuStorage\Plugins\UploadToken;
 use zgldh\QiniuStorage\Plugins\PrivateImagePreviewUrl;
 use zgldh\QiniuStorage\Plugins\VerifyCallback;
+use zgldh\QiniuStorage\Plugins\WithUploadToken;
 
 class QiniuFilesystemServiceProvider extends ServiceProvider
 {
@@ -55,6 +56,7 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
                 $file_system->addPlugin(new VerifyCallback());
                 $file_system->addPlugin(new Fetch());
                 $file_system->addPlugin(new Qetag());
+                $file_system->addPlugin(new WithUploadToken());
 
                 return $file_system;
             }

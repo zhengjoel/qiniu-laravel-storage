@@ -36,6 +36,8 @@ class QiniuAdapter extends AbstractAdapter
 
     private $lastQetag = null;
 
+    private $uploadToken = null;
+
     public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null, $access = 'public')
     {
         $this->access_key = $access_key;
@@ -67,6 +69,11 @@ class QiniuAdapter extends AbstractAdapter
 
         $prefixedDomain = $is_empty ? null : $prefix;
         $this->prefixedDomains[$domainType] = $prefixedDomain;
+    }
+
+    private function withUploadToken($token)
+    {
+        $this->uploadToken = $token;
     }
 
     private function getAuth()
@@ -140,8 +147,8 @@ class QiniuAdapter extends AbstractAdapter
     {
         $auth = $this->getAuth();
 
-        $token = $config->get('token', null);
-        $token = $token ? $token : $auth->uploadToken($this->bucket, $path);
+        $token = $this->uploadToken ?: $auth->uploadToken($this->bucket, $path);
+        $this->withUploadToken(null);
 
         $params = $config->get('params', null);
         $mime = $config->get('mime', 'application/octet-stream');
@@ -188,8 +195,8 @@ class QiniuAdapter extends AbstractAdapter
     {
         $auth = $this->getAuth();
 
-        $token = $config->get('token', null);
-        $token = $token ? $token : $auth->uploadToken($this->bucket, $path);
+        $token = $this->uploadToken ?: $auth->uploadToken($this->bucket, $path);
+        $this->withUploadToken(null);
 
         $params = $config->get('params', null);
         $mime = $config->get('mime', 'application/octet-stream');

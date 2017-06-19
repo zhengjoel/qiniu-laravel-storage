@@ -164,6 +164,16 @@ class QiniuStorage
     }
 
     /**
+     *  下次 put 操作，将使用该 uploadToken 进行上传。 常用于持久化操作。
+     * @param $token
+     * @return mixed
+     */
+    public function withUploadToken($token)
+    {
+        $this->storage->getDriver()->withUploadToken($token);
+    }
+
+    /**
      * 获取下载地址
      * @param $key
      * @return mixed
