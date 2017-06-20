@@ -71,7 +71,7 @@ class QiniuAdapter extends AbstractAdapter
         $this->prefixedDomains[$domainType] = $prefixedDomain;
     }
 
-    private function withUploadToken($token)
+    public function withUploadToken($token)
     {
         $this->uploadToken = $token;
     }
