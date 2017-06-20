@@ -27,7 +27,7 @@ class WithUploadToken extends AbstractPlugin
      */
     public function getMethod()
     {
-        return 'uploadToken';
+        return 'withUploadToken';
     }
 
     public function handle($token)
