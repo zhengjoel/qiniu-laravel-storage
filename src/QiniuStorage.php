@@ -298,4 +298,13 @@ class QiniuStorage
     {
         return $this->storage->getDriver()->qetag();
     }
+
+    /**
+     * 得到最后一次执行 put, copy, append 等写入操作后，得到的返回值。
+     * @return array
+     */
+    public function lastReturn()
+    {
+        return $this->storage->getDriver()->getLastReturn();
+    }
 }

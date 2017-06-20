@@ -34,7 +34,7 @@ class QiniuAdapter extends AbstractAdapter
 
     private $prefixedDomains = [];
 
-    private $lastQetag = null;
+    private $lastReturn = null;
 
     private $uploadToken = null;
 
@@ -162,7 +162,7 @@ class QiniuAdapter extends AbstractAdapter
 
             return false;
         } else {
-            $this->lastQetag = $ret['hash'];
+            $this->lastReturn = $ret;
             return $ret;
         }
     }
@@ -209,7 +209,7 @@ class QiniuAdapter extends AbstractAdapter
 
             return false;
         } else {
-            $this->lastQetag = $ret['hash'];
+            $this->lastReturn = $ret;
             return $ret;
         }
     }
@@ -754,6 +754,18 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function getLastQetag()
     {
-        return $this->lastQetag;
+        if ($this->lastReturn && isset($this->lastReturn['hash'])) {
+            return $this->lastReturn['hash'];
+        }
+        return null;
+    }
+
+    /**
+     * @DriverFunction
+     * @return null
+     */
+    public function getLastReturn()
+    {
+        return $this->lastReturn;
     }
 }

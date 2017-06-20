@@ -8,6 +8,7 @@ use zgldh\QiniuStorage\Plugins\ImageExif;
 use zgldh\QiniuStorage\Plugins\ImageInfo;
 use zgldh\QiniuStorage\Plugins\AvInfo;
 use zgldh\QiniuStorage\Plugins\ImagePreviewUrl;
+use zgldh\QiniuStorage\Plugins\LastReturn;
 use zgldh\QiniuStorage\Plugins\PersistentFop;
 use zgldh\QiniuStorage\Plugins\PersistentStatus;
 use zgldh\QiniuStorage\Plugins\PrivateDownloadUrl;
@@ -57,6 +58,7 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
                 $file_system->addPlugin(new Fetch());
                 $file_system->addPlugin(new Qetag());
                 $file_system->addPlugin(new WithUploadToken());
+                $file_system->addPlugin(new LastReturn());
 
                 return $file_system;
             }

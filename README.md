@@ -6,6 +6,10 @@
 
 ## 更新
 
+ master-dev
+ 1. 增加了 ```withUploadToken```, ```lastReturn``` 等命令。
+ 2. 修正了代码内的一些typo
+
  v0.6 增加了```fetch```, ```qetag``` 命令。
 
  v0.5 增加了```QiniuUrl```来更方便的设置文件 URL 参数。
@@ -96,7 +100,8 @@
     $disk->getDriver()->persistentFop('file.flv','fop','队列名');   //使用私有队列执行持久化数据处理
     $disk->getDriver()->persistentStatus($persistent_fop_id);       //查看持久化数据处理的状态。
     $disk->getDriver()->fetch('http://abc.com/foo.jpg', 'bar.jpg'); //调用fetch将 foo.jpg 数据以 bar.jpg 的名字储存起来。
-    $disk->getDriver()->qetag();    //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
+    $disk->getDriver()->qetag();        //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
+    $disk->getDriver()->lastReturn();   //得到最后一次执行 put, copy, append 等写入操作后，得到的返回值。
 
 ```
 
@@ -155,7 +160,8 @@
     $disk->persistentStatus($persistent_fop_id);        //查看持久化数据处理的状态。
 
     $disk->fetch('http://abc.com/foo.jpg', 'bar.jpg'); //调用fetch将 foo.jpg 数据以 bar.jpg 的名字储存起来。
-    $disk->qetag();    //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
+    $disk->qetag();     //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
+    $disk->lastReturn();//得到最后一次执行 put, copy, append 等写入操作后，得到的返回值。
 
 ```
 
