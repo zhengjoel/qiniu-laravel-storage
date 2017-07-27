@@ -542,6 +542,21 @@ class QiniuAdapter extends AbstractAdapter
 
         return $location;
     }
+    
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param string $domainType
+     * @return string
+     */
+    public function getUrl($path = null, $domainType = 'default')
+    {
+        $this->pathPrefix = $this->prefixedDomains[$domainType];
+        $location = $this->applyPathPrefix($path);
+        $location = new QiniuUrl($location);
+
+        return $location->getUrl();
+    }
 
     /**
      * @DriverFunction
