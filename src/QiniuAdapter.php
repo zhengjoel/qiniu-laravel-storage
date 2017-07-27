@@ -551,11 +551,7 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function getUrl($path = null, $domainType = 'default')
     {
-        $this->pathPrefix = $this->prefixedDomains[$domainType];
-        $location = $this->applyPathPrefix($path);
-        $location = new QiniuUrl($location);
-
-        return $location->getUrl();
+        return $this->downloadUrl($path, $domainType)->getUrl();
     }
 
     /**
