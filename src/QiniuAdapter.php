@@ -542,6 +542,17 @@ class QiniuAdapter extends AbstractAdapter
 
         return $location;
     }
+    
+    /**
+     * @DriverFunction
+     * @param null $path
+     * @param string $domainType
+     * @return string
+     */
+    public function getUrl($path = null, $domainType = 'default')
+    {
+        return $this->downloadUrl($path, $domainType)->getUrl();
+    }
 
     /**
      * @DriverFunction
