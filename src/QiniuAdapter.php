@@ -20,6 +20,9 @@ class QiniuAdapter extends AbstractAdapter
 
     use NotSupportingVisibilityTrait, StreamedReadingTrait;
 
+    const ACCESS_PUBLIC = 'public';
+    const ACCESS_PRIVATE = 'private';
+
     private $access_key = null;
     private $secret_key = null;
     private $bucket = null;
@@ -38,7 +41,7 @@ class QiniuAdapter extends AbstractAdapter
 
     private $uploadToken = null;
 
-    public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null, $access = 'public')
+    public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null, $access = self::ACCESS_PUBLIC)
     {
         $this->access_key = $access_key;
         $this->secret_key = $secret_key;
@@ -108,7 +111,7 @@ class QiniuAdapter extends AbstractAdapter
         if ($this->operation == null) {
             $this->operation = new Operation(
                 $this->domains['default'],
-                $this->access === 'public' ? null : $this->getAuth()
+                $this->access === self::ACCESS_PUBLIC ? null : $this->getAuth()
             );
         }
 
@@ -536,7 +539,7 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function downloadUrl($path = null, $domainType = 'default')
     {
-        if ($this->access == 'private') {
+        if ($this->access == self::ACCESS_PRIVATE) {
             return $this->privateDownloadUrl($path, $domainType);
         }
         $this->pathPrefix = $this->prefixedDomains[$domainType];
@@ -685,6 +688,9 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function imagePreviewUrl($path = null, $ops = null)
     {
+        if ($this->access == self::ACCESS_PRIVATE) {
+            return $this->privateImagePreviewUrl($path, $ops);
+        }
         $operation = $this->getOperation();
         $url = $operation->buildUrl($path, $ops);
         $url = new QiniuUrl($url);
