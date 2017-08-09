@@ -6,9 +6,9 @@
 
 ## 更新
 
- master-dev
- 1. 增加了 ```withUploadToken```, ```lastReturn``` 等命令。
- 2. 修正了代码内的一些typo
+ v0.7
+  1. 增加了 ```withUploadToken```, ```lastReturn``` 等命令。
+  2. 修正了代码内的一些typo
 
  v0.6 增加了```fetch```, ```qetag``` 命令。
 
@@ -85,6 +85,8 @@
                       ->setDownload('foo.jpg');                 //获取下载地址，文件名为 foo.jpg
     $disk->getDriver()->downloadUrl('file.jpg', 'https');       //获取HTTPS下载地址
     $disk->getDriver()->privateDownloadUrl('file.jpg');         //获取私有bucket下载地址
+    $disk->getDriver()->privateDownloadUrl('file.jpg?attname=foo.jpg');         
+                                                                //获取私有bucket下载地址，文件名为 foo.jpg
     $disk->getDriver()->privateDownloadUrl('file.jpg', 'https');//获取私有bucket的HTTPS下载地址
     $disk->getDriver()->privateDownloadUrl('file.jpg',
                                         [
@@ -144,6 +146,8 @@
          ->setDownload('foo.jpg');                      //获取下载地址，文件名为 foo.jpg
     $disk->downloadUrl('file.jpg', 'https');            //获取HTTPS下载地址
     $disk->privateDownloadUrl('file.jpg');              //获取私有bucket下载地址
+    $disk->privateDownloadUrl('file.jpg?attname=foo.jpg');         
+                                                                //获取私有bucket下载地址，文件名为 foo.jpg
     $disk->privateDownloadUrl('file.jpg', 'https');     //获取私有bucket的HTTPS下载地址
     $disk->privateDownloadUrl('file.jpg',
                             [
