@@ -536,13 +536,16 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function downloadUrl($path = null, $domainType = 'default')
     {
+        if ($this->access == 'private') {
+            return $this->privateDownloadUrl($path, $domainType);
+        }
         $this->pathPrefix = $this->prefixedDomains[$domainType];
         $location = $this->applyPathPrefix($path);
         $location = new QiniuUrl($location);
 
         return $location;
     }
-    
+
     /**
      * @DriverFunction
      * @param null $path
