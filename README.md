@@ -72,6 +72,8 @@
     $directories = $disk->allDirectories($directory);   //这个也没实现。。。
     $disk->makeDirectory($directory);               //这个其实没有任何作用
     $disk->deleteDirectory($directory);             //删除目录，包括目录下所有子文件子目录
+    $disk->url('a.png');                            //返回文件的URL
+    $DISK->url(['path' => 'a.png', 'domainType' => 'default']); //返回文件的URL
 
     $disk->getDriver()->uploadToken();              //获取上传Token
     $disk->getDriver()->uploadToken('file.jpg');    //获取上传Token
