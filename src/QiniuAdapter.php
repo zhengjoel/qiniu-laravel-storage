@@ -436,7 +436,10 @@ class QiniuAdapter extends AbstractAdapter
     {
         $bucketMgr = $this->getBucketManager();
 
-        list($items, $marker, $error) = $bucketMgr->listFiles($this->bucket, $directory);
+        list($ret, $error) = $bucketMgr->listFiles($this->bucket, $directory);
+        $items = @$ret['items'];
+        $marker = @$ret['marker'];
+        $commonPrefixes = @$ret['commonPrefixes'];
         if ($error !== null) {
             $this->logQiniuError($error);
 
@@ -556,16 +559,16 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function getUrl($path)
     {
-        if(is_string($path)) {
+        if (is_string($path)) {
             return $this->downloadUrl($path, 'default')->getUrl();
         }
-        
-        if(is_array($path)) {
+
+        if (is_array($path)) {
             return $this->downloadUrl($path['path'], $path['domainType'])->getUrl();
         }
-        
+
         return $this->downloadUrl('', 'default')->getUrl();
-        
+
     }
 
     /**
