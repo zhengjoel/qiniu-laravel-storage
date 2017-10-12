@@ -604,13 +604,14 @@ class QiniuAdapter extends AbstractAdapter
      * @param bool $force
      * @return bool
      */
-    public function persistentFop($path = null, $fops = null, $pipline = null, $force = false, $notify_url = null)
+    public function persistentFop($path = null, $fops = null, $pipline = null, $force = false, $notifyUrl = null)
     {
         $auth = $this->getAuth();
 
-        $pfop = New PersistentFop($auth, $this->bucket, $pipline, is_null($notify_url) ? $this->notify_url : $notify_url, $force);
+        $pfop = New PersistentFop($auth);
 
-        list($id, $error) = $pfop->execute($path, $fops);
+        $notifyUrl = is_null($notifyUrl) ? $this->notify_url : $notifyUrl
+        list($id, $error) = $pfop->execute($this->bucket, $path, $fops, $pipline, $notifyUrl, $force);
 
         if ($error != null) {
             $this->logQiniuError($error);
