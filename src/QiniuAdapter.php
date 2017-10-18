@@ -610,7 +610,7 @@ class QiniuAdapter extends AbstractAdapter
 
         $pfop = New PersistentFop($auth);
 
-        $notifyUrl = is_null($notifyUrl) ? $this->notify_url : $notifyUrl
+        $notifyUrl = is_null($notifyUrl) ? $this->notify_url : $notifyUrl;
         list($id, $error) = $pfop->execute($this->bucket, $path, $fops, $pipline, $notifyUrl, $force);
 
         if ($error != null) {
