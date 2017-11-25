@@ -2,7 +2,7 @@
   "name": "abcsun/qiniu-laravel",
   "type": "library",
   "description": "Qiniu Resource (Cloud) Storage SDK for Laravel 5",
-  "version": "0.8.4",
+  "version": "0.9.0",
   "keywords": [
     "qiniu",
     "storage",
@@ -32,6 +32,13 @@
   "autoload": {
     "psr-4": {
       "zgldh\\QiniuStorage\\": "src/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "zgldh\\QiniuStorage\\QiniuFilesystemServiceProvider"
+      ]
     }
   }
 }
