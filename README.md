@@ -6,6 +6,13 @@
 
 ## 更新
 
+ v0.9
+  兼容 Laravel 5.5 的自动包安装功能
+  
+ v0.8
+  1. 修正了getUrl
+  2. 修正了最新的 Qiniu API 适配
+
  v0.7
   1. 增加了 ```withUploadToken```, ```lastReturn``` 等命令。
   2. 修正了代码内的一些typo
