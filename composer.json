@@ -2,7 +2,7 @@
   "name": "abcsun/qiniu-laravel",
   "type": "library",
   "description": "Qiniu Resource (Cloud) Storage SDK for Laravel 5",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "keywords": [
     "qiniu",
     "storage",

@@ -41,8 +41,14 @@ class QiniuAdapter extends AbstractAdapter
 
     private $uploadToken = null;
 
-    public function __construct($access_key, $secret_key, $bucket, $domains, $notify_url = null, $access = self::ACCESS_PUBLIC)
-    {
+    public function __construct(
+        $access_key,
+        $secret_key,
+        $bucket,
+        $domains,
+        $notify_url = null,
+        $access = self::ACCESS_PUBLIC
+    ) {
         $this->access_key = $access_key;
         $this->secret_key = $secret_key;
         $this->bucket = $bucket;
@@ -235,8 +241,7 @@ class QiniuAdapter extends AbstractAdapter
         $params = null,
         $mime = 'application/octet-stream',
         $checkCrc = false
-    )
-    {
+    ) {
         if ($fileResource === false) {
             throw new \Exception("file can not open", 1);
         }
@@ -421,7 +426,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $location = $this->applyPathPrefix($path);
 
-        return array('contents' => file_get_contents($location));
+        return ['contents' => file_get_contents($location)];
     }
 
     /**
@@ -443,13 +448,13 @@ class QiniuAdapter extends AbstractAdapter
         if ($error !== null) {
             $this->logQiniuError($error);
 
-            return array();
+            return [];
         } else {
-            $contents = array();
+            $contents = [];
             foreach ($items as $item) {
                 $normalized = [
-                    'type'      => 'file',
-                    'path'      => $item['key'],
+                    'type' => 'file',
+                    'path' => $item['key'],
                     'timestamp' => $item['putTime']
                 ];
 
@@ -494,7 +499,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $stat = $this->getMetadata($path);
         if ($stat) {
-            return array('size' => $stat['fsize']);
+            return ['size' => $stat['fsize']];
         }
 
         return false;
@@ -511,7 +516,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $stat = $this->getMetadata($path);
         if ($stat) {
-            return array('mimetype' => $stat['mimeType']);
+            return ['mimetype' => $stat['mimeType']];
         }
 
         return false;
@@ -528,7 +533,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $stat = $this->getMetadata($path);
         if ($stat) {
-            return array('timestamp' => $stat['putTime']);
+            return ['timestamp' => $stat['putTime']];
         }
 
         return false;
@@ -629,7 +634,9 @@ class QiniuAdapter extends AbstractAdapter
      */
     public function persistentStatus($id)
     {
-        return PersistentFop::status($id);
+        $auth = $this->getAuth();
+        $pfop = New PersistentFop($auth);
+        return $pfop->status($id);
     }
 
     /**
@@ -740,8 +747,7 @@ class QiniuAdapter extends AbstractAdapter
         $expires = 3600,
         $policy = null,
         $strictPolicy = true
-    )
-    {
+    ) {
         $auth = $this->getAuth();
 
         $token = $auth->uploadToken(
