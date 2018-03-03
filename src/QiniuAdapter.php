@@ -262,7 +262,7 @@ class QiniuAdapter extends AbstractAdapter
                 new QiniuConfig(),
                 $params,
                 $mime,
-                $checkCrc
+                basename($key)
             );
             return $result;
         }
@@ -275,7 +275,7 @@ class QiniuAdapter extends AbstractAdapter
             $mime,
             new QiniuConfig()
         );
-        $ret = $up->upload();
+        $ret = $up->upload(basename($key));
         fclose($file);
         return $ret;
     }
@@ -453,8 +453,8 @@ class QiniuAdapter extends AbstractAdapter
             $contents = [];
             foreach ($items as $item) {
                 $normalized = [
-                    'type' => 'file',
-                    'path' => $item['key'],
+                    'type'      => 'file',
+                    'path'      => $item['key'],
                     'timestamp' => $item['putTime']
                 ];
 
