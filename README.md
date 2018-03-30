@@ -6,8 +6,12 @@
 
 ## 注意
 
-  从七牛获取到的`putTime`时间戳，是以 100纳秒 为单位的。
-   
+  从七牛获取到的`putTime`时间戳，是以 100纳秒 为单位的。 
+  
+  PHP 可以用 Carbon http://carbon.nesbot.com/docs/ Carbon::createFromTimestampMs($putTime/10000) 来保证最大精度
+  
+  JavaScript 可以用 moment http://momentjs.cn/docs/#/parsing/unix-offset/  moment(putTime/10000) 来保证最大精度
+   
   参考 https://developer.qiniu.com/kodo/api/1308/stat https://developer.qiniu.com/kodo/api/1284/list
 
 ## 更新
