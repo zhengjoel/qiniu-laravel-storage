@@ -4,6 +4,12 @@
 
 符合Laravel 5 的Storage用法。
 
+## 注意
+
+  从七牛获取到的`putTime`时间戳，是以 100纳秒 为单位的。
+   
+  参考 https://developer.qiniu.com/kodo/api/1308/stat https://developer.qiniu.com/kodo/api/1284/list
+
 ## 更新
 
  v0.9
