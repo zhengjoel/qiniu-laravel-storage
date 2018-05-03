@@ -1,5 +1,6 @@
 <?php namespace zgldh\QiniuStorage;
 
+use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use zgldh\QiniuStorage\Plugins\DownloadUrl;
@@ -23,7 +24,7 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        \Storage::extend(
+        Storage::extend(
             'qiniu',
             function ($app, $config) {
                 if (isset($config['domains'])) {
