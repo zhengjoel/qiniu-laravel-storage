@@ -18,9 +18,12 @@
 
 ## 更新
 
+ v0.10
+  支持“公开空间”的 CDN 时间戳防盗链
+
  v0.9
   兼容 Laravel 5.5 的自动包安装功能
-  
+
  v0.8
   1. 修正了getUrl
   2. 修正了最新的 Qiniu API 适配
@@ -59,6 +62,8 @@
             'bucket'    => '',  //Bucket名字
             'notify_url'=> '',  //持久化处理回调地址
             'access'    => 'public'  //空间访问控制 public 或 private
+            'hotlink_prevention_key' => 'afc89ff8bd2axxxxxxxxxxxxxxbb', // CND 时间戳防盗链的 key。 设置为 null 则不启用本功能。
+//            'hotlink_prevention_key' => 'cbab68a279xxxxxxxxxxab509a', // 同上，备用
         ],
     ],
 

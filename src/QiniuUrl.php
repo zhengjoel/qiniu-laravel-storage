@@ -6,10 +6,12 @@ class QiniuUrl implements JsonSerializable
 {
     private $url = null;
     private $parameters = [];
+    private $hotPreventionKey = null;
 
-    public function __construct($url)
+    public function __construct($url, $hotPreventionKey = null)
     {
         $this->url = $url;
+        $this->hotPreventionKey = $hotPreventionKey;
     }
 
     public function __toString()
@@ -17,6 +19,12 @@ class QiniuUrl implements JsonSerializable
         $url = trim($this->getUrl(), '?&');
 
         $parameters = $this->getParameters();
+
+        if ($this->isHotlinkPrevention()) {
+            list($sign, $t) = $this->hotlinkPreventionSign();
+            $parameters['sign'] = $sign;
+            $parameters['t'] = $t;
+        }
         $parameterString = join('&', $parameters);
 
         if ($parameterString) {
@@ -58,6 +66,7 @@ class QiniuUrl implements JsonSerializable
 
     /**
      * @param null $download
+     * @return QiniuUrl
      */
     public function setDownload($download)
     {
@@ -81,7 +90,9 @@ class QiniuUrl implements JsonSerializable
     }
 
     /**
-     * @param array $parameters
+     * @param $name
+     * @param $value
+     * @return QiniuUrl
      */
     public function setParameter($name, $value)
     {
@@ -99,5 +110,38 @@ class QiniuUrl implements JsonSerializable
     function jsonSerialize()
     {
         return $this->__toString();
+    }
+
+    private function hotlinkPreventionSign()
+    {
+        $t = dechex(time());
+        $parsedUrl = parse_url($this->url);
+        $pendingString = $this->getHotPreventionKey() . str_replace('%2F', '/', urlencode($parsedUrl['path'])) . $t;
+        $sign = strtolower(md5($pendingString));
+        return ['sign' => $sign, 't' => $t];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHotlinkPrevention()
+    {
+        return !!$this->getHotPreventionKey();
+    }
+
+    /**
+     * @return null
+     */
+    public function getHotPreventionKey()
+    {
+        return $this->hotPreventionKey;
+    }
+
+    /**
+     * @param null $hotPreventionKey
+     */
+    public function setHotPreventionKey($hotPreventionKey)
+    {
+        $this->hotPreventionKey = $hotPreventionKey;
     }
 }

@@ -36,10 +36,9 @@ class QiniuAdapter extends AbstractAdapter
     private $operation = null;
 
     private $prefixedDomains = [];
-
     private $lastReturn = null;
-
     private $uploadToken = null;
+    private $hotlinkPreventionKey = null;
 
     public function __construct(
         $access_key,
@@ -47,7 +46,8 @@ class QiniuAdapter extends AbstractAdapter
         $bucket,
         $domains,
         $notify_url = null,
-        $access = self::ACCESS_PUBLIC
+        $access = self::ACCESS_PUBLIC,
+        $hotlinkPreventionKey = null
     ) {
         $this->access_key = $access_key;
         $this->secret_key = $secret_key;
@@ -59,6 +59,7 @@ class QiniuAdapter extends AbstractAdapter
         $this->setDomainPrefix('http://' . $this->domains['custom'], 'custom');
         $this->notify_url = $notify_url;
         $this->access = $access;
+        $this->hotlinkPreventionKey = $hotlinkPreventionKey;
     }
 
     /**
@@ -552,7 +553,7 @@ class QiniuAdapter extends AbstractAdapter
         }
         $this->pathPrefix = $this->prefixedDomains[$domainType];
         $location = $this->applyPathPrefix($path);
-        $location = new QiniuUrl($location);
+        $location = new QiniuUrl($location, $this->hotlinkPreventionKey);
 
         return $location;
     }
@@ -712,7 +713,7 @@ class QiniuAdapter extends AbstractAdapter
         }
         $operation = $this->getOperation();
         $url = $operation->buildUrl($path, $ops);
-        $url = new QiniuUrl($url);
+        $url = new QiniuUrl($url, $this->hotlinkPreventionKey);
 
         return $url;
     }
