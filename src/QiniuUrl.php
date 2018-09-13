@@ -22,8 +22,8 @@ class QiniuUrl implements JsonSerializable
 
         if ($this->isHotlinkPrevention()) {
             list($sign, $t) = $this->hotlinkPreventionSign();
-            $parameters['sign'] = $sign;
-            $parameters['t'] = $t;
+            $parameters[] = 'sign=' . $sign;
+            $parameters[] = 't=' . $t;
         }
         $parameterString = join('&', $parameters);
 
@@ -114,11 +114,11 @@ class QiniuUrl implements JsonSerializable
 
     private function hotlinkPreventionSign()
     {
-        $t = dechex(time());
+        $t = dechex(time() + 3600);
         $parsedUrl = parse_url($this->url);
         $pendingString = $this->getHotPreventionKey() . str_replace('%2F', '/', urlencode($parsedUrl['path'])) . $t;
         $sign = strtolower(md5($pendingString));
-        return ['sign' => $sign, 't' => $t];
+        return [$sign, $t];
     }
 
     /**
