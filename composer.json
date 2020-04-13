@@ -1,5 +1,5 @@
 {
-  "name": "abcsun/qiniu-laravel",
+  "name": "zgldh/qiniu-laravel-storage",
   "type": "library",
   "description": "Qiniu Resource (Cloud) Storage SDK for Laravel 5",
   "keywords": [
