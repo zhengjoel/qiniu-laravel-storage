@@ -336,7 +336,7 @@ class QiniuAdapter extends AbstractAdapter
     {
         $bucketMgr = $this->getBucketManager();
 
-        $error = $bucketMgr->delete($this->bucket, $path);
+        list($ret, $error) = $bucketMgr->delete($this->bucket, $path);
         if ($error !== null) {
             $this->logQiniuError($error, $this->bucket . '/' . $path);
 
