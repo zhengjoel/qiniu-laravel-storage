@@ -1,9 +1,7 @@
 <?php namespace zgldh\QiniuStorage;
 
-use League\Flysystem\Adapter\AbstractAdapter;
-use League\Flysystem\Adapter\Polyfill\NotSupportingVisibilityTrait;
-use League\Flysystem\Adapter\Polyfill\StreamedReadingTrait;
 use League\Flysystem\Config;
+use League\Flysystem\FilesystemAdapter;
 use Qiniu\Auth;
 use Qiniu\Etag;
 use Qiniu\Http\Error;
@@ -15,11 +13,8 @@ use Qiniu\Storage\ResumeUploader;
 use Qiniu\Storage\UploadManager;
 use Qiniu\Config as QiniuConfig;
 
-class QiniuAdapter extends AbstractAdapter
+class QiniuAdapter implements FilesystemAdapter
 {
-
-    use NotSupportingVisibilityTrait, StreamedReadingTrait;
-
     const ACCESS_PUBLIC = 'public';
     const ACCESS_PRIVATE = 'private';
 
