@@ -1,7 +1,20 @@
 <?php namespace zgldh\QiniuStorage;
 
 use League\Flysystem\Config;
+use League\Flysystem\FileAttributes;
 use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\InvalidVisibilityProvided;
+use League\Flysystem\UnableToCheckExistence;
+use League\Flysystem\UnableToCopyFile;
+use League\Flysystem\UnableToCreateDirectory;
+use League\Flysystem\UnableToDeleteDirectory;
+use League\Flysystem\UnableToDeleteFile;
+use League\Flysystem\UnableToMoveFile;
+use League\Flysystem\UnableToReadFile;
+use League\Flysystem\UnableToRetrieveMetadata;
+use League\Flysystem\UnableToSetVisibility;
+use League\Flysystem\UnableToWriteFile;
 use Qiniu\Auth;
 use Qiniu\Etag;
 use Qiniu\Http\Error;
@@ -43,7 +56,8 @@ class QiniuAdapter implements FilesystemAdapter
         $notify_url = null,
         $access = self::ACCESS_PUBLIC,
         $hotlinkPreventionKey = null
-    ) {
+    )
+    {
         $this->access_key = $access_key;
         $this->secret_key = $secret_key;
         $this->bucket = $bucket;
@@ -140,86 +154,6 @@ class QiniuAdapter implements FilesystemAdapter
     }
 
     /**
-     * Write a new file.
-     *
-     * @param string $path
-     * @param string $contents
-     * @param Config $config Config object
-     *
-     * @return array|false false on failure file meta data on success
-     */
-    public function write($path, $contents, Config $config)
-    {
-        $auth = $this->getAuth();
-
-        $token = $this->uploadToken ?: $auth->uploadToken($this->bucket, $path);
-        $this->withUploadToken(null);
-
-        $params = $config->get('params', null);
-        $mime = $config->get('mime', 'application/octet-stream');
-        $checkCrc = $config->get('checkCrc', false);
-
-        $upload_manager = $this->getUploadManager();
-        list($ret, $error) = $upload_manager->put($token, $path, $contents, $params, $mime, $checkCrc);
-
-        if ($error !== null) {
-            $this->logQiniuError($error);
-
-            return false;
-        } else {
-            $this->lastReturn = $ret;
-            return $ret;
-        }
-    }
-
-    /**
-     * Update a file using a stream.
-     *
-     * @param string $path
-     * @param resource $resource
-     * @param Config $config Config object or visibility setting
-     *
-     * @return mixed false of file metadata
-     */
-    public function updateStream($path, $resource, Config $config)
-    {
-        return $this->writeStream($path, $resource, $config);
-    }
-
-
-    /**
-     * Write using a stream.
-     *
-     * @param string $path
-     * @param resource $resource
-     * @param Config $config
-     *
-     * @return mixed false or file metadata
-     */
-    public function writeStream($path, $resource, Config $config)
-    {
-        $auth = $this->getAuth();
-
-        $token = $this->uploadToken ?: $auth->uploadToken($this->bucket, $path);
-        $this->withUploadToken(null);
-
-        $params = $config->get('params', null);
-        $mime = $config->get('mime', 'application/octet-stream');
-        $checkCrc = $config->get('checkCrc', false);
-
-        list($ret, $error) = $this->qiniuPutFile($token, $path, $resource, $params, $mime, $checkCrc);
-
-        if ($error !== null) {
-            $this->logQiniuError($error);
-
-            return false;
-        } else {
-            $this->lastReturn = $ret;
-            return $ret;
-        }
-    }
-
-    /**
      * Rewrite Qiniu\Storage\UploadManager::putFile
      * @param $upToken
      * @param $key
@@ -237,7 +171,8 @@ class QiniuAdapter implements FilesystemAdapter
         $params = null,
         $mime = 'application/octet-stream',
         $checkCrc = false
-    ) {
+    )
+    {
         if ($fileResource === false) {
             throw new \Exception("file can not open", 1);
         }
@@ -276,70 +211,6 @@ class QiniuAdapter implements FilesystemAdapter
         return $ret;
     }
 
-    /**
-     * Rename a file.
-     *
-     * @param string $path
-     * @param string $newpath
-     *
-     * @return bool
-     */
-    public function rename($path, $newpath)
-    {
-        $bucketMgr = $this->getBucketManager();
-
-        list($ret, $error) = $bucketMgr->move($this->bucket, $path, $this->bucket, $newpath);
-        if ($error !== null) {
-            $this->logQiniuError($error);
-
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Copy a file.
-     *
-     * @param string $path
-     * @param string $newpath
-     *
-     * @return bool
-     */
-    public function copy($path, $newpath)
-    {
-        $bucketMgr = $this->getBucketManager();
-
-        list($ret, $error) = $bucketMgr->copy($this->bucket, $path, $this->bucket, $newpath);
-        if ($error !== null) {
-            $this->logQiniuError($error);
-
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Delete a file.
-     *
-     * @param string $path
-     *
-     * @return bool
-     */
-    public function delete($path)
-    {
-        $bucketMgr = $this->getBucketManager();
-
-        list($ret, $error) = $bucketMgr->delete($this->bucket, $path);
-        if ($error !== null) {
-            $this->logQiniuError($error, $this->bucket . '/' . $path);
-
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     /**
      * Fetch a file.
@@ -354,7 +225,7 @@ class QiniuAdapter implements FilesystemAdapter
     {
         $bucketMgr = $this->getBucketManager();
 
-        list($ret, $error) = $bucketMgr->fetch($url, $this->bucket, $key);
+        [$ret, $error] = $bucketMgr->fetch($url, $this->bucket, $key);
         if ($error !== null) {
             $this->logQiniuError($error, $this->bucket . '/' . $key);
 
@@ -362,23 +233,6 @@ class QiniuAdapter implements FilesystemAdapter
         } else {
             return $ret;
         }
-    }
-
-    /**
-     * Delete a directory.
-     *
-     * @param string $dirname
-     *
-     * @return bool
-     */
-    public function deleteDir($dirname)
-    {
-        $files = $this->listContents($dirname);
-        foreach ($files as $file) {
-            $this->delete($file['path']);
-        }
-
-        return true;
     }
 
     /**
@@ -394,76 +248,6 @@ class QiniuAdapter implements FilesystemAdapter
         return ['path' => $dirname];
     }
 
-    /**
-     * Check whether a file exists.
-     *
-     * @param string $path
-     *
-     * @return array|bool|null
-     */
-    public function has($path)
-    {
-        $meta = $this->getMetadata($path);
-        if ($meta) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Read a file.
-     *
-     * @param string $path
-     *
-     * @return array|false
-     */
-    public function read($path)
-    {
-        $location = $this->applyPathPrefix($path);
-
-        return ['contents' => file_get_contents($location)];
-    }
-
-    /**
-     * List contents of a directory.
-     *
-     * @param string $directory
-     * @param bool $recursive
-     *
-     * @return array
-     */
-    public function listContents($directory = '', $recursive = false)
-    {
-        $bucketMgr = $this->getBucketManager();
-
-        list($ret, $error) = $bucketMgr->listFiles($this->bucket, $directory);
-        $items = @$ret['items'];
-        $marker = @$ret['marker'];
-        $commonPrefixes = @$ret['commonPrefixes'];
-        if ($error !== null) {
-            $this->logQiniuError($error);
-
-            return [];
-        } else {
-            $contents = [];
-            foreach ($items as $item) {
-                $normalized = [
-                    'type'      => 'file',
-                    'path'      => $item['key'],
-                    'timestamp' => $item['putTime']
-                ];
-
-                if ($normalized['type'] === 'file') {
-                    $normalized['size'] = $item['fsize'];
-                }
-
-                array_push($contents, $normalized);
-            }
-
-            return $contents;
-        }
-    }
 
     /**
      * Get all the meta data of a file or directory.
@@ -472,67 +256,16 @@ class QiniuAdapter implements FilesystemAdapter
      *
      * @return array|false
      */
-    public function getMetadata($path)
+    private function getMetadata($path)
     {
         $bucketMgr = $this->getBucketManager();
 
-        list($ret, $error) = $bucketMgr->stat($this->bucket, $path);
+        [$ret, $error] = $bucketMgr->stat($this->bucket, $path);
         if ($error !== null) {
             return false;
         } else {
             return $ret;
         }
-    }
-
-    /**
-     * Get all the meta data of a file or directory.
-     *
-     * @param string $path
-     *
-     * @return array|false
-     */
-    public function getSize($path)
-    {
-        $stat = $this->getMetadata($path);
-        if ($stat) {
-            return ['size' => $stat['fsize']];
-        }
-
-        return false;
-    }
-
-    /**
-     * Get the mimetype of a file.
-     *
-     * @param string $path
-     *
-     * @return array|false
-     */
-    public function getMimetype($path)
-    {
-        $stat = $this->getMetadata($path);
-        if ($stat) {
-            return ['mimetype' => $stat['mimeType']];
-        }
-
-        return false;
-    }
-
-    /**
-     * Get the timestamp of a file.
-     *
-     * @param string $path
-     *
-     * @return array|false
-     */
-    public function getTimestamp($path)
-    {
-        $stat = $this->getMetadata($path);
-        if ($stat) {
-            return ['timestamp' => $stat['putTime']];
-        }
-
-        return false;
     }
 
     /**
@@ -609,10 +342,10 @@ class QiniuAdapter implements FilesystemAdapter
     {
         $auth = $this->getAuth();
 
-        $pfop = New PersistentFop($auth);
+        $pfop = new PersistentFop($auth);
 
         $notifyUrl = is_null($notifyUrl) ? $this->notify_url : $notifyUrl;
-        list($id, $error) = $pfop->execute($this->bucket, $path, $fops, $pipline, $notifyUrl, $force);
+        [$id, $error] = $pfop->execute($this->bucket, $path, $fops, $pipline, $notifyUrl, $force);
 
         if ($error != null) {
             $this->logQiniuError($error);
@@ -631,7 +364,7 @@ class QiniuAdapter implements FilesystemAdapter
     public function persistentStatus($id)
     {
         $auth = $this->getAuth();
-        $pfop = New PersistentFop($auth);
+        $pfop = new PersistentFop($auth);
         return $pfop->status($id);
     }
 
@@ -644,7 +377,7 @@ class QiniuAdapter implements FilesystemAdapter
     {
         $operation = $this->getOperation();
 
-        list($ret, $error) = $operation->execute($path, 'avinfo');
+        [$ret, $error] = $operation->execute($path, 'avinfo');
 
         if ($error !== null) {
             $this->logQiniuError($error);
@@ -664,7 +397,7 @@ class QiniuAdapter implements FilesystemAdapter
     {
         $operation = $this->getOperation();
 
-        list($ret, $error) = $operation->execute($path, 'imageInfo');
+        [$ret, $error] = $operation->execute($path, 'imageInfo');
 
         if ($error !== null) {
             $this->logQiniuError($error);
@@ -684,7 +417,7 @@ class QiniuAdapter implements FilesystemAdapter
     {
         $operation = $this->getOperation();
 
-        list($ret, $error) = $operation->execute($path, 'exif');
+        [$ret, $error] = $operation->execute($path, 'exif');
 
         if ($error !== null) {
             $this->logQiniuError($error);
@@ -743,7 +476,8 @@ class QiniuAdapter implements FilesystemAdapter
         $expires = 3600,
         $policy = null,
         $strictPolicy = true
-    ) {
+    )
+    {
         $auth = $this->getAuth();
 
         $token = $auth->uploadToken(
@@ -802,4 +536,299 @@ class QiniuAdapter implements FilesystemAdapter
     {
         return $this->lastReturn;
     }
+
+    /**
+     * Write a new file.
+     *
+     * @param string $path
+     * @param string $contents
+     * @param Config $config Config object
+     *
+     * @return array|false false on failure file meta data on success
+     */
+    public function write(string $path, string $contents, Config $config): void
+    {
+        $auth = $this->getAuth();
+
+        $token = $this->uploadToken ?: $auth->uploadToken($this->bucket, $path);
+        $this->withUploadToken(null);
+
+        $params = $config->get('params', null);
+        $mime = $config->get('mime', 'application/octet-stream');
+        $checkCrc = $config->get('checkCrc', false);
+
+        $upload_manager = $this->getUploadManager();
+        [$ret, $error] = $upload_manager->put($token, $path, $contents, $params, $mime, $checkCrc);
+
+        if ($error !== null) {
+            $this->logQiniuError($error);
+            throw UnableToWriteFile::atLocation($path, $error->message());
+        } else {
+            $this->lastReturn = $ret;
+        }
+    }
+
+    /**
+     * Write using a stream.
+     *
+     * @param string $path
+     * @param $contents
+     * @param Config $config
+     *
+     * @return mixed false or file metadata
+     * @throws \Exception
+     */
+    public function writeStream(string $path, $contents, Config $config): void
+    {
+        $auth = $this->getAuth();
+
+        $token = $this->uploadToken ?: $auth->uploadToken($this->bucket, $path);
+        $this->withUploadToken(null);
+
+        $params = $config->get('params', null);
+        $mime = $config->get('mime', 'application/octet-stream');
+        $checkCrc = $config->get('checkCrc', false);
+
+        $resourceData = '';
+        while (!feof($contents)) {
+            $resourceData = $resourceData . fread($contents, 1024);
+        }
+
+        [$ret, $error] = $this->qiniuPutFile($token, $path, $resourceData, $params, $mime, $checkCrc);
+
+        if ($error !== null) {
+            $this->logQiniuError($error);
+        } else {
+            $this->lastReturn = $ret;
+        }
+    }
+
+    /**
+     * Read a file.
+     *
+     * @param string $path
+     *
+     * @return array|false
+     */
+    public function read(string $path): string
+    {
+        $location = $this->applyPathPrefix($path);
+        $content = file_get_contents($location);
+        if (false === $content) {
+            throw UnableToReadFile::fromLocation($path);
+        }
+        return $content;
+    }
+
+    public function readStream(string $path)
+    {
+        if (ini_get('allow_url_fopen')) {
+            if ($result = fopen($this->getUrl($path), 'r')) {
+                return $result;
+            }
+        }
+
+        throw UnableToReadFile::fromLocation($path);
+    }
+
+
+    /**
+     * List contents of a directory.
+     *
+     * @param string $path
+     * @param bool $deep
+     * @return array
+     */
+    public function listContents(string $path, bool $deep): iterable
+    {
+        $bucketMgr = $this->getBucketManager();
+
+        [$ret, $error] = $bucketMgr->listFiles($this->bucket, $path);
+        $items = @$ret['items'];
+        $marker = @$ret['marker'];
+        $commonPrefixes = @$ret['commonPrefixes'];
+        if ($error !== null) {
+            $this->logQiniuError($error);
+
+            return [];
+        } else {
+            $contents = [];
+            foreach ($items as $item) {
+                $normalized = [
+                    'type'      => 'file',
+                    'path'      => $item['key'],
+                    'timestamp' => $item['putTime'],
+                ];
+
+                if ($normalized['type'] === 'file') {
+                    $normalized['size'] = $item['fsize'];
+                }
+
+                array_push($contents, $normalized);
+            }
+
+            return $contents;
+        }
+    }
+
+    /**
+     * Copy a file.
+     *
+     * @param string $source
+     * @param string $destination
+     * @param Config $config
+     * @return void
+     */
+    public function copy(string $source, string $destination, Config $config): void
+    {
+        $bucketMgr = $this->getBucketManager();
+
+        [$ret, $error] = $bucketMgr->copy($this->bucket, $source, $this->bucket, $destination);
+        if ($error !== null) {
+            $this->logQiniuError($error);
+            throw UnableToCopyFile::fromLocationTo($source, $destination);
+        }
+    }
+
+    /**
+     * Delete a file.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public function delete(string $path): void
+    {
+        $bucketMgr = $this->getBucketManager();
+
+        [$ret, $error] = $bucketMgr->delete($this->bucket, $path);
+        if ($error !== null) {
+            $this->logQiniuError($error, $this->bucket . '/' . $path);
+            throw UnableToDeleteFile::atLocation($path);
+        }
+    }
+
+    public function fileExists(string $path): bool
+    {
+        $meta = $this->getMetadata($path);
+        if ($meta) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function directoryExists(string $path): bool
+    {
+        return $this->fileExists($path);
+    }
+
+    public function deleteDirectory(string $path): void
+    {
+        $this->delete($path);
+    }
+
+    public function createDirectory(string $path, Config $config): void
+    {
+        // Do not need to create directory. Just use write() to save your content.
+    }
+
+    public function setVisibility(string $path, string $visibility): void
+    {
+        throw UnableToSetVisibility::atLocation($path);
+    }
+
+    public function visibility(string $path): FileAttributes
+    {
+        throw UnableToSetVisibility::atLocation($path);
+    }
+
+    public function mimeType(string $path): FileAttributes
+    {
+        $stat = $this->getMetadata($path);
+        if ($stat) {
+            return new FileAttributes($path, null, null, null, $stat['mimeType']);
+        }
+        throw UnableToRetrieveMetadata::mimeType($path);
+    }
+
+    public function lastModified(string $path): FileAttributes
+    {
+        $stat = $this->getMetadata($path);
+        if ($stat) {
+            return new FileAttributes($path, null, null, $stat['putTime']);
+        }
+        throw UnableToRetrieveMetadata::mimeType($path);
+    }
+
+    public function fileSize(string $path): FileAttributes
+    {
+        $stat = $this->getMetadata($path);
+        if ($stat) {
+            return new FileAttributes($path, $stat['fsize']);
+        }
+        throw UnableToRetrieveMetadata::mimeType($path);
+    }
+
+    public function move(string $source, string $destination, Config $config): void
+    {
+        $bucketMgr = $this->getBucketManager();
+        [$ret, $error] = $bucketMgr->move($this->bucket, $source, $this->bucket, $destination);
+        if ($error !== null) {
+            $this->logQiniuError($error);
+            throw UnableToMoveFile::fromLocationTo($source, $destination);
+        }
+    }
+
+    /**
+     * @var string|null path prefix
+     */
+    protected $pathPrefix;
+
+    /**
+     * @var string
+     */
+    protected $pathSeparator = '/';
+
+    /**
+     * Set the path prefix.
+     *
+     * @param string $prefix
+     *
+     * @return void
+     */
+    public function setPathPrefix($prefix)
+    {
+        $prefix = (string)$prefix;
+
+        if ($prefix === '') {
+            $this->pathPrefix = null;
+            return;
+        }
+
+        $this->pathPrefix = rtrim($prefix, '\\/') . $this->pathSeparator;
+    }
+
+    /**
+     * Get the path prefix.
+     *
+     * @return string|null path prefix or null if pathPrefix is empty
+     */
+    public function getPathPrefix()
+    {
+        return $this->pathPrefix;
+    }
+
+    /**
+     * Prefix a path.
+     *
+     * @param string $path
+     *
+     * @return string prefixed path
+     */
+    public function applyPathPrefix($path)
+    {
+        return $this->getPathPrefix() . ltrim($path, '\\/');
+    }
+
 }
