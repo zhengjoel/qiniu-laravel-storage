@@ -1,8 +1,8 @@
-# Qiniu 云储存 Laravel 5 Storage版
+# Qiniu 云储存 Laravel 5/6/7/8/9 Storage版
 
 基于 https://github.com/qiniu/php-sdk 开发
 
-符合Laravel 5 的Storage用法。
+符合Laravel 5/6/7/8/9 的Storage用法。
 
 ## 注意
 
@@ -17,6 +17,9 @@
    
 
 ## 更新
+
+ v9.0
+  支持 Laravel 9
 
  v0.10
   支持“公开空间”的 CDN 时间戳防盗链

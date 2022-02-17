@@ -1,5 +1,6 @@
 <?php namespace zgldh\QiniuStorage;
 
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
@@ -62,7 +63,7 @@ class QiniuFilesystemServiceProvider extends ServiceProvider
                 $file_system->addPlugin(new WithUploadToken());
                 $file_system->addPlugin(new LastReturn());
 
-                return $file_system;
+                return new FilesystemAdapter($file_system, $qiniu_adapter, $config);
             }
         );
     }
