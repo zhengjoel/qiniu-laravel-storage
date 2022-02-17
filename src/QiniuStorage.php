@@ -160,7 +160,7 @@ class QiniuStorage
      */
     public function uploadToken($key = null, $expires = 3600, $policy = null, $strictPolicy = true)
     {
-        return $this->storage->getDriver()->uploadToken($key, $expires, $policy, $strictPolicy);
+        return $this->storage->getAdapter()->uploadToken($key, $expires, $policy, $strictPolicy);
     }
 
     /**
@@ -170,7 +170,7 @@ class QiniuStorage
      */
     public function withUploadToken($token)
     {
-        $this->storage->getDriver()->withUploadToken($token);
+        $this->storage->getAdapter()->withUploadToken($token);
     }
 
     /**
@@ -180,7 +180,7 @@ class QiniuStorage
      */
     public function downloadUrl($key, $domainType = 'default')
     {
-        return $this->storage->getDriver()->downloadUrl($key, $domainType);
+        return $this->storage->getAdapter()->downloadUrl($key, $domainType);
     }
 
     /**
@@ -190,7 +190,7 @@ class QiniuStorage
      */
     public function privateDownloadUrl($key, $domainType = 'default')
     {
-        return $this->storage->getDriver()->privateDownloadUrl($key, $domainType);
+        return $this->storage->getAdapter()->privateDownloadUrl($key, $domainType);
     }
 
     /**
@@ -200,7 +200,7 @@ class QiniuStorage
      */
     public function avInfo($key)
     {
-        return $this->storage->getDriver()->avInfo($key);
+        return $this->storage->getAdapter()->avInfo($key);
     }
 
     /**
@@ -210,7 +210,7 @@ class QiniuStorage
      */
     public function imageInfo($key)
     {
-        return $this->storage->getDriver()->imageInfo($key);
+        return $this->storage->getAdapter()->imageInfo($key);
     }
 
     /**
@@ -220,7 +220,7 @@ class QiniuStorage
      */
     public function imageExif($key)
     {
-        return $this->storage->getDriver()->imageExif($key);
+        return $this->storage->getAdapter()->imageExif($key);
     }
 
     /**
@@ -231,7 +231,7 @@ class QiniuStorage
      */
     public function imagePreviewUrl($key, $opts)
     {
-        return $this->storage->getDriver()->imagePreviewUrl($key, $opts);
+        return $this->storage->getAdapter()->imagePreviewUrl($key, $opts);
     }
 
     /**
@@ -242,7 +242,7 @@ class QiniuStorage
      */
     public function privateImagePreviewUrl($key, $opts)
     {
-        return $this->storage->getDriver()->privateImagePreviewUrl($key, $opts);
+        return $this->storage->getAdapter()->privateImagePreviewUrl($key, $opts);
     }
 
     /**
@@ -256,7 +256,7 @@ class QiniuStorage
      */
     public function persistentFop($key, $opts, $pipline = null, $force = false, $notify_url = null)
     {
-        return $this->storage->getDriver()->persistentFop($key, $opts, $pipline, $force, $notify_url);
+        return $this->storage->getAdapter()->persistentFop($key, $opts, $pipline, $force, $notify_url);
     }
 
     /**
@@ -266,7 +266,7 @@ class QiniuStorage
      */
     public function persistentStatus($id)
     {
-        return $this->storage->getDriver()->persistentStatus($id);
+        return $this->storage->getAdapter()->persistentStatus($id);
     }
 
     /**
@@ -276,7 +276,7 @@ class QiniuStorage
      */
     public function verifyCallback($contentType, $originAuthorization, $url, $body)
     {
-        return $this->storage->getDriver()->verifyCallback($contentType, $originAuthorization, $url, $body);
+        return $this->storage->getAdapter()->verifyCallback($contentType, $originAuthorization, $url, $body);
     }
 
     /**
@@ -287,7 +287,7 @@ class QiniuStorage
      */
     public function fetch($url, $key)
     {
-        return $this->storage->getDriver()->fetch($url, $key);
+        return $this->storage->getAdapter()->fetch($url, $key);
     }
 
     /**
@@ -296,7 +296,7 @@ class QiniuStorage
      */
     public function qetag()
     {
-        return $this->storage->getDriver()->qetag();
+        return $this->storage->getAdapter()->qetag();
     }
 
     /**
@@ -305,6 +305,6 @@ class QiniuStorage
      */
     public function lastReturn()
     {
-        return $this->storage->getDriver()->getLastReturn();
+        return $this->storage->getAdapter()->getLastReturn();
     }
 }

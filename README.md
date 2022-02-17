@@ -102,42 +102,42 @@
     $disk->url('a.png');                            //返回文件的URL
     $disk->url(['path' => 'a.png', 'domainType' => 'default']); //返回文件的URL
 
-    $disk->getDriver()->uploadToken();              //获取上传Token
-    $disk->getDriver()->uploadToken('file.jpg');    //获取上传Token
+    $disk->getAdapter()->uploadToken();              //获取上传Token
+    $disk->getAdapter()->uploadToken('file.jpg');    //获取上传Token
 
-    $disk->getDriver()->withUploadToken($token);    // 使用自定义的 uploadToken 进行上传，
+    $disk->getAdapter()->withUploadToken($token);    // 使用自定义的 uploadToken 进行上传，
     $disk->put('file.jpg',$content);                // 则本次的 put 操作，将使用上述的 $token 进行上传。
                                                     // 常用于自动触发持久化处理 https://github.com/qiniu/php-sdk/blob/master/examples/upload_and_pfop.php
     
-    $disk->getDriver()->downloadUrl('file.jpg');                //获取下载地址
-    $disk->getDriver()->downloadUrl('file.jpg')
+    $disk->getAdapter()->downloadUrl('file.jpg');                //获取下载地址
+    $disk->getAdapter()->downloadUrl('file.jpg')
                       ->setDownload('foo.jpg');                 //获取下载地址，文件名为 foo.jpg
-    $disk->getDriver()->downloadUrl('file.jpg', 'https');       //获取HTTPS下载地址
-    $disk->getDriver()->privateDownloadUrl('file.jpg');         //获取私有bucket下载地址
-    $disk->getDriver()->privateDownloadUrl('file.jpg?attname=foo.jpg');         
+    $disk->getAdapter()->downloadUrl('file.jpg', 'https');       //获取HTTPS下载地址
+    $disk->getAdapter()->privateDownloadUrl('file.jpg');         //获取私有bucket下载地址
+    $disk->getAdapter()->privateDownloadUrl('file.jpg?attname=foo.jpg');         
                                                                 //获取私有bucket下载地址，文件名为 foo.jpg
-    $disk->getDriver()->privateDownloadUrl('file.jpg', 'https');//获取私有bucket的HTTPS下载地址
-    $disk->getDriver()->privateDownloadUrl('file.jpg',
+    $disk->getAdapter()->privateDownloadUrl('file.jpg', 'https');//获取私有bucket的HTTPS下载地址
+    $disk->getAdapter()->privateDownloadUrl('file.jpg',
                                         [
                                             'domain'=>'https',
                                             'expires'=>3600
                                         ]);                     //获取私有bucket的HTTPS下载地址。超时 3600 秒。
-    $disk->getDriver()->avInfo('file.mp3');                     //获取多媒体文件信息
-    $disk->getDriver()->imageInfo('file.jpg');                  //获取图片信息
-    $disk->getDriver()->imageExif('file.jpg');                  //获取图片EXIF信息
-    $disk->getDriver()->imagePreviewUrl('file.jpg','imageView2/0/w/100/h/200');                         //获取图片预览URL
-    $disk->getDriver()->privateImagePreviewUrl('file.jpg','imageView2/0/w/100/h/200');                  //获取私有bucket图片预览URL
-    $disk->getDriver()->verifyCallback('application/x-www-form-urlencoded', $request->header('Authorization'), 'callback url', $request->getContent());//验证回调内容是否合法
-    $disk->getDriver()->persistentFop('file.flv','avthumb/m3u8/segtime/40/vcodec/libx264/s/320x240');   //执行持久化数据处理
-    $disk->getDriver()->persistentFop('file.flv','fop','队列名');   //使用私有队列执行持久化数据处理
-    $disk->getDriver()->persistentStatus($persistent_fop_id);       //查看持久化数据处理的状态。
-    $disk->getDriver()->fetch('http://abc.com/foo.jpg', 'bar.jpg'); //调用fetch将 foo.jpg 数据以 bar.jpg 的名字储存起来。
-    $disk->getDriver()->qetag();        //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
-    $disk->getDriver()->lastReturn();   //得到最后一次执行 put, copy, append 等写入操作后，得到的返回值。
+    $disk->getAdapter()->avInfo('file.mp3');                     //获取多媒体文件信息
+    $disk->getAdapter()->imageInfo('file.jpg');                  //获取图片信息
+    $disk->getAdapter()->imageExif('file.jpg');                  //获取图片EXIF信息
+    $disk->getAdapter()->imagePreviewUrl('file.jpg','imageView2/0/w/100/h/200');                         //获取图片预览URL
+    $disk->getAdapter()->privateImagePreviewUrl('file.jpg','imageView2/0/w/100/h/200');                  //获取私有bucket图片预览URL
+    $disk->getAdapter()->verifyCallback('application/x-www-form-urlencoded', $request->header('Authorization'), 'callback url', $request->getContent());//验证回调内容是否合法
+    $disk->getAdapter()->persistentFop('file.flv','avthumb/m3u8/segtime/40/vcodec/libx264/s/320x240');   //执行持久化数据处理
+    $disk->getAdapter()->persistentFop('file.flv','fop','队列名');   //使用私有队列执行持久化数据处理
+    $disk->getAdapter()->persistentStatus($persistent_fop_id);       //查看持久化数据处理的状态。
+    $disk->getAdapter()->fetch('http://abc.com/foo.jpg', 'bar.jpg'); //调用fetch将 foo.jpg 数据以 bar.jpg 的名字储存起来。
+    $disk->getAdapter()->qetag();        //得到最后一次执行 put, copy, append 等写入操作后，得到的hash值。详见 https://github.com/qiniu/qetag
+    $disk->getAdapter()->lastReturn();   //得到最后一次执行 put, copy, append 等写入操作后，得到的返回值。
 
 ```
 
-第二种用法 （就是省略了一个getDriver）
+第二种用法 （就是省略了一个getAdapter）
 
 ```php
 
