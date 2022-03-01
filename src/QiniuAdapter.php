@@ -589,12 +589,7 @@ class QiniuAdapter implements FilesystemAdapter
         $mime = $config->get('mime', 'application/octet-stream');
         $checkCrc = $config->get('checkCrc', false);
 
-        $resourceData = '';
-        while (!feof($contents)) {
-            $resourceData = $resourceData . fread($contents, 1024);
-        }
-
-        [$ret, $error] = $this->qiniuPutFile($token, $path, $resourceData, $params, $mime, $checkCrc);
+        [$ret, $error] = $this->qiniuPutFile($token, $path, $contents, $params, $mime, $checkCrc);
 
         if ($error !== null) {
             $this->logQiniuError($error);
