@@ -30,7 +30,7 @@
   ],
   "require": {
     "php": ">=5.3.3",
-    "zhengjoel/php-sdk": "^7.4.3",
+    "zhengjoel/php-sdk": "^7.2",
     "league/flysystem": "^1.0"
   },
   "autoload": {
