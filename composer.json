@@ -30,7 +30,7 @@
   ],
   "require": {
     "php": ">=5.3.3",
-    "qiniu/php-sdk": "^7.2",
+    "zhengjoel/php-sdk": "^7.4.3",
     "league/flysystem": "^3.0"
   },
   "autoload": {
