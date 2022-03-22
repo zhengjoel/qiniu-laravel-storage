@@ -1,5 +1,5 @@
 {
-  "name": "zgldh/qiniu-laravel-storage",
+  "name": "zhengjoel/qiniu-laravel-storage",
   "type": "library",
   "description": "Qiniu Resource (Cloud) Storage SDK for Laravel 5",
   "keywords": [
@@ -21,11 +21,16 @@
       "email": "chenglongsun_nj@163.com",
       "role": "Developer",
       "homepage": "http://github.com/abcsun"
+    },
+    {
+      "name": "zhengjoel",
+      "email": "626279057@qq.com",
+      "role": "Developer",
     }
   ],
   "require": {
     "php": ">=5.3.3",
-    "qiniu/php-sdk": "^7.2",
+    "zhengjoel/php-sdk": "^7.2",
     "league/flysystem": "^1.0"
   },
   "autoload": {
